@@ -1,0 +1,81 @@
+# Copyright 2017 Peter Dimov
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+
+import modules ;
+import sequence ;
+import set ;
+import project ;
+import virtual-target ;
+import testing ;
+
+if "--debug-check-build" in [ modules.peek : ARGV ]
+{
+    .info-enabled = 1 ;
+}
+
+local rule .info ( messages * )
+{
+    if $(.info-enabled)
+    {
+        ECHO info: $(messages) ;
+    }
+}
+
+local all-libraries = [ MATCH .*libs/(.*)/build/.* :
+    [ glob ../../../libs/*/build/Jamfile.v2 ]
+    [ glob ../../../libs/*/build/Jamfile ] ] ;
+
+all-libraries = [ sequence.unique $(all-libraries) ] ;
+
+# The function_types library has a Jamfile, but it's used for maintenance
+# purposes, there's no library to build and install.
+
+all-libraries = [ set.difference $(all-libraries) : function_types ] ;
+
+#ECHO all-libraries: $(all-libraries) ;
+
+rule alias-sources-impl ( project name : property-set : sources * )
+{
+    local target-graph ;
+
+    for local s in $(sources)
+    {
+        target-graph += [ virtual-target.traverse $(s) : : include-roots ] ;
+    }
+
+    .info $(name): ;
+
+    for local t in $(target-graph)
+    {
+        .info "  " [ $(t).name ] ;
+    }
+
+    return $(target-graph) ;
+}
+
+for local lib in $(all-libraries)
+{
+    local path = ../../../libs/$(lib)/build ;
+    local project = [ project.load $(path) ] ;
+    local pt = [ project.target $(project) ] ;
+    local mt = [ $(pt).main-target stage ] ;
+
+    if $(mt)
+    {
+        generate library-$(lib) : $(path)//stage : <generating-rule>@alias-sources-impl ;
+    }
+    else
+    {
+        .info library-$(lib): ;
+        .info "   (no stage target, using '$(path)')" ;
+
+        alias library-$(lib) : $(path) ;
+    }
+}
+
+for local lib in $(all-libraries)
+{
+    run main.cpp library-$(lib) : : : : $(lib) ;
+}
