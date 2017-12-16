@@ -42,17 +42,29 @@ rule alias-sources-impl ( project name : property-set : sources * )
 
     for local s in $(sources)
     {
-        target-graph += [ virtual-target.traverse $(s) : : include-roots ] ;
+        target-graph += [ virtual-target.traverse $(s) : include-sources : include-roots ] ;
+    }
+
+    # Remove targets created by the main target
+
+    local result ;
+
+    for local t in $(target-graph)
+    {
+        if [ $(t).root ] && ! ( $(t) in $(sources) )
+        {
+            result += $(t) ;
+        }
     }
 
     .info $(name): ;
 
-    for local t in $(target-graph)
+    for local t in $(result)
     {
         .info "  " [ $(t).name ] ;
     }
 
-    return $(target-graph) ;
+    return $(result) ;
 }
 
 for local lib in $(all-libraries)
