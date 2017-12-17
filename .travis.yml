@@ -174,7 +174,7 @@ matrix:
       addons:
         apt:
           packages:
-            - libstdc++-4.9-dev
+            - libstdc++-6-dev
           sources:
             - ubuntu-toolchain-r-test
 
