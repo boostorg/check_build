@@ -67,9 +67,11 @@ rule alias-sources-impl ( project name : property-set : sources * )
     return $(result) ;
 }
 
+path-constant ROOT : ../../.. ;
+
 for local lib in $(all-libraries)
 {
-    local path = ../../../libs/$(lib)/build ;
+    local path = [ NORMALIZE_PATH /$(ROOT)/libs/$(lib)/build ] ;
     local project = [ project.load $(path) ] ;
     local pt = [ project.target $(project) ] ;
     local mt = [ $(pt).main-target stage ] ;
