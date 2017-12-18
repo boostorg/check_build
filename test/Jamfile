@@ -9,6 +9,7 @@ import set ;
 import project ;
 import virtual-target ;
 import testing ;
+import ac ;
 
 if "--debug-check-build" in [ modules.peek : ARGV ]
 {
@@ -91,5 +92,5 @@ for local lib in $(all-libraries)
 
 for local lib in $(all-libraries)
 {
-    run main.cpp library-$(lib) : : : : $(lib) ;
+    run main.cpp : : : [ ac.check-library library-$(lib) : <library>library-$(lib) : <build>no ] : $(lib) ;
 }
