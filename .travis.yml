@@ -199,6 +199,7 @@ install:
   - cd ..
   - git clone --recursive -b $BOOST_BRANCH https://github.com/boostorg/boost.git boost-root
   - cd boost-root
+  - mkdir -p tools/check_build
   - rm -rf tools/check_build/*
   - cp -r $TRAVIS_BUILD_DIR/* tools/check_build
   - ./bootstrap.sh

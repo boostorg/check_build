@@ -28,7 +28,7 @@ install:
   - cd ..
   - git clone --recursive -b %BOOST_BRANCH% --depth 1 https://github.com/boostorg/boost.git boost-root
   - cd boost-root
-  - rd/s/q tools\check_build
+  - if exist tools\check_build rd/s/q tools\check_build
   - xcopy /s /e /q %APPVEYOR_BUILD_FOLDER% tools\check_build\
   - cmd /c bootstrap
   - b2 -d0 headers
