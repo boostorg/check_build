@@ -12,6 +12,11 @@ branches:
     - develop
     - /feature\/.*/
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+
 env:
   matrix:
     - BOGUS_JOB=true
@@ -24,175 +29,55 @@ matrix:
   include:
     - os: linux
       compiler: g++
-      env: TOOLSET=gcc CXXSTD=03
-
-    - os: linux
-      compiler: g++
-      env: TOOLSET=gcc CXXSTD=11
+      env: TOOLSET=gcc
 
     - os: linux
       compiler: g++-5
-      env: TOOLSET=gcc-5 CXXSTD=03
+      env: TOOLSET=gcc-5
       addons:
         apt:
           packages:
             - g++-5
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-5
-      env: TOOLSET=gcc-5 CXXSTD=11
-      addons:
-        apt:
-          packages:
-            - g++-5
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-5
-      env: TOOLSET=gcc-5 CXXSTD=14
-      addons:
-        apt:
-          packages:
-            - g++-5
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-5
-      env: TOOLSET=gcc-5 CXXSTD=1z
-      addons:
-        apt:
-          packages:
-            - g++-5
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       compiler: g++-6
-      env: TOOLSET=gcc-6 CXXSTD=03
+      env: TOOLSET=gcc-6
       addons:
         apt:
           packages:
             - g++-6
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-6
-      env: TOOLSET=gcc-6 CXXSTD=11
-      addons:
-        apt:
-          packages:
-            - g++-6
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-6
-      env: TOOLSET=gcc-6 CXXSTD=14
-      addons:
-        apt:
-          packages:
-            - g++-6
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-6
-      env: TOOLSET=gcc-6 CXXSTD=1z
-      addons:
-        apt:
-          packages:
-            - g++-6
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
       compiler: g++-7
-      env: TOOLSET=gcc-7 CXXSTD=03
+      env: TOOLSET=gcc-7
       addons:
         apt:
           packages:
             - g++-7
-          sources:
-            - ubuntu-toolchain-r-test
 
     - os: linux
-      compiler: g++-7
-      env: TOOLSET=gcc-7 CXXSTD=11
+      compiler: g++-8
+      env: TOOLSET=gcc-8
       addons:
         apt:
           packages:
-            - g++-7
-          sources:
-            - ubuntu-toolchain-r-test
+            - g++-8
 
     - os: linux
-      compiler: g++-7
-      env: TOOLSET=gcc-7 CXXSTD=14
+      compiler: g++-9
+      env: TOOLSET=gcc-9
       addons:
         apt:
           packages:
-            - g++-7
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: g++-7
-      env: TOOLSET=gcc-7 CXXSTD=17
-      addons:
-        apt:
-          packages:
-            - g++-7
-          sources:
-            - ubuntu-toolchain-r-test
+            - g++-9
 
     - os: linux
       compiler: clang++
-      env: TOOLSET=clang CXXSTD=03
-
-    - os: linux
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=11
-
-    - os: linux
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=14
-      addons:
-        apt:
-          packages:
-            - libstdc++-4.9-dev
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=1z
-      addons:
-        apt:
-          packages:
-            - libstdc++-6-dev
-          sources:
-            - ubuntu-toolchain-r-test
+      env: TOOLSET=clang
 
     - os: osx
       compiler: clang++
-      env: TOOLSET=clang CXXSTD=03
-
-    - os: osx
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=11
-
-    - os: osx
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=14
-
-    - os: osx
-      compiler: clang++
-      env: TOOLSET=clang CXXSTD=1z
+      env: TOOLSET=clang
 
 install:
   - BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
@@ -206,7 +91,7 @@ install:
   - ./b2 -d0 headers
 
 script:
-  - ./b2 -j3 tools/check_build/test toolset=$TOOLSET cxxstd=$CXXSTD
+  - ./b2 -j3 tools/check_build/test toolset=$TOOLSET
 
 notifications:
   email:
