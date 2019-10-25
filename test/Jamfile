@@ -11,6 +11,8 @@ import virtual-target ;
 import testing ;
 import ac ;
 
+project : requirements -<link>static ; # from tools/Jamfile
+
 if "--debug-check-build" in [ modules.peek : ARGV ]
 {
     .info-enabled = 1 ;
@@ -52,7 +54,7 @@ rule alias-sources-impl ( project name : property-set : sources * )
 
     for local t in $(target-graph)
     {
-        if [ $(t).root ] && ! ( $(t) in $(sources) )
+        if [ $(t).root ] && ! ( $(t) in $(sources) ) && ( [ $(t).type ] = STATIC_LIB || [ $(t).type ] = SHARED_LIB )
         {
             result += $(t) ;
         }
