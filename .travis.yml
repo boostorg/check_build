@@ -80,6 +80,11 @@ matrix:
       compiler: clang++
       env: TOOLSET=clang
 
+    - os: linux
+      dist: bionic
+      compiler: g++
+      env: TOOLSET=gcc
+
     - os: osx
       compiler: clang++
       env: TOOLSET=clang
